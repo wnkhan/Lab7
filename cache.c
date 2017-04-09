@@ -5,7 +5,7 @@
 
 
 /////////////////Cache Stuff/////////////////////////////
-cache *newCache(int aLines,int size, int linesize, int n, char *r)
+cache *newCache(int aLines,int size, int linesize, int n, char r)
 { 
 	cache *c = malloc(sizeof(cache));
 	c->size = size;

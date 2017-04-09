@@ -7,7 +7,7 @@ typedef struct cache
 	int blockSize;
 	int cacheBlocks;
 	int assoc;
-	char *replacement;
+	char replacement;
 	int cacheSets;
 	int offbits;
 	int indexbits;
@@ -16,7 +16,7 @@ typedef struct cache
 	
 }cache;
 
-extern cache *newCache(int aLines, int size, int linesize, int assoc, char *replacement);
+extern cache *newCache(int aLines, int size, int linesize, int assoc, char replacement);
 extern int offBits(cache *c);
 extern int indexBits(cache *c);
 extern int tagBits(cache *c);
