@@ -20,23 +20,23 @@ cache *newCache(int aLines,int size, int linesize, int n, char r)
 	return c;
 }
 
-// int offBits(cache *c)
-// {
-// 	return c->offbits;
-// }
+int offBits(cache *c)
+{
+	return c->offbits;
+}
 
-// int indexBits(cache *c)
-// {
-// 	return c->indexbits;
-// }
+int indexBits(cache *c)
+{
+	return c->indexbits;
+}
 
-// int tagBits(cache *c)
-// {
-// 	return c->tagbits;
-// }
+int tagBits(cache *c)
+{
+	return c->tagbits;
+}
 
-// int totCacheSize(cache *c)
-// {
-// 	return c->totalCache;
-// }
+int totCacheSize(cache *c)
+{
+	return c->totalCache;
+}
 //////////////////////////End Cache Stuff////////////////////////////////////
