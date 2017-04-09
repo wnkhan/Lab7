@@ -34,12 +34,14 @@ typedef struct cacheblk
 }cacheblk;
 
 extern mainMem *newMem(int size);
-extern cache *newCache(int size, int linesize, int assoc, char replacement);
 extern int addressLines(mainMem *m);
+
+extern cache *newCache(int size, int linesize, int assoc, char replacement);
 extern int offBits(cache *c);
 extern int indexBits(cache *c);
 extern int tagBits(cache *c);
 extern int totCacheSize(cache *c);
+
 extern int numberofbits(int num);
 
 #endif

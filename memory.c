@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include "memory.h"
 
+////////////////////Main Mem Stuff//////////////////////////
+
 mainMem *newMem(int size)
 {	
 	mainMem *m = malloc(sizeof(mainMem));
@@ -10,6 +12,13 @@ mainMem *newMem(int size)
 	return m;
 }
 
+int addressLines(mainMem *m)
+{
+	return m->lines;
+}
+/////////////////End Main Mem Stuff/////////////////////////
+
+/////////////////Cache Stuff/////////////////////////////
 cache *newCache(int size, int linesize, int n, char r)
 { 
 	cache *c = malloc(sizeof(cache));
@@ -24,11 +33,6 @@ cache *newCache(int size, int linesize, int n, char r)
 	// c->tagbits = aLines - (c->offbits + c->indexbits);
 	// c->totalCache = size + (c->tagbits+2) * (c->cacheBlocks/8);
 	return c;
-}
-
-int addressLines(mainMem *m)
-{
-	return m->lines;
 }
 
 // int offBits(cache *c)
@@ -50,7 +54,9 @@ int addressLines(mainMem *m)
 // {
 // 	return c->totalCache;
 // }
+//////////////////////////End Cache Stuff////////////////////////////////////
 
+///////////////////////Helper functions///////////////////////////////////////////////////////
 //Shifts through all the bits in a given number to determine max bits needed for decmial version.
 int numberofbits(int num){
 
