@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "memory.h"
+#include "mainMem.h"
 
 ////////////////////Main Mem Stuff//////////////////////////
 

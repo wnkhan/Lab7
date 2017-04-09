@@ -1,7 +1,9 @@
 //Lab7 -- ECE487
 #include <stdio.h>
 #include <stdlib.h>
-#include "memory.h"
+#include "mainMem.h"
+#include "cache.h"
+#include "cacheblk.h"
 
 int main()
 {
@@ -33,7 +35,7 @@ int main()
 	printf("\nSimulator output: \n");
 	printf("Total address lines required = %d \n", addressLines(m));
 
-	cache *c = newCache(cachebytes,blocksize,N,replacement);
+	cache *c = newCache(addressLines(m),cachebytes,blocksize,N,replacement);
 	// printf("Number of bits for offset= %d \n", offBits(c));
 	// printf("Number of bits for index= %d \n", indexBits(c));
 	// printf("Number of bits for tag= %d \n", tagBits(c));

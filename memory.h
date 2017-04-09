@@ -1,5 +1,5 @@
-#ifndef MEMORY_INCLUDED_
-#define MEMORY_INCLUDED_
+#ifndef MAINMEM_INCLUDED_
+#define MAINMEM_INCLUDED_
 
 typedef struct mainMem
 {
