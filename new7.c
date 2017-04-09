@@ -3,32 +3,33 @@
 #include <stdlib.h>
 #include "mainMem.h"
 #include "cache.h"
-#include "cacheblk.h"
+
 
 int main()
 {
-	int mainbytes=128, cachebytes=32, blocksize=4, N=2;
-	char replacement='F', *input = "e1.txt";
+	int mainbytes, cachebytes, blocksize, N;
+	char replacement, input[20];
 
-	// printf("Enter the size of the main memory in bytes:");
-	
-	// scanf("%d", &mainbytes);    //Main memory size is stored in mainbytes.
-	
-	// printf("Enter the size of the cache in bytes:");
-	// scanf("%d", &cachebytes);   //Cache size is stored in cachebytes.
 
-	// printf("Enter the cache block/line size:");
-	// scanf("%d", &blocksize);    //Block size is store in blocksize.
+	printf("Enter the size of the main memory in bytes:");
 	
-	// printf("\nEnter the degree of set-associativity(input n for an n-way set-associative mapping):");
-	// scanf("%d", &N);            //N for associativity
+	scanf("%d", &mainbytes);    //Main memory size is stored in mainbytes.
+	
+	printf("Enter the size of the cache in bytes:");
+	scanf("%d", &cachebytes);   //Cache size is stored in cachebytes.
 
-	// printf("Enter the replacement policy (L=LRU, F=FIFO):");
-	// scanf(" %c", &replacement);  //Replacement holds the replacement policy for the cache.
+	printf("Enter the cache block/line size:");
+	scanf("%d", &blocksize);    //Block size is store in blocksize.
 	
-	// printf("Enter the name of the input file containing the list of memory references generated\n");
-	// printf("by the CPU: ");
-	// scanf("%s", input);          //Input stores the file name for the memory references.
+	printf("\nEnter the degree of set-associativity(input n for an n-way set-associative mapping):");
+	scanf("%d", &N);            //N for associativity
+
+	printf("Enter the replacement policy (L=LRU, F=FIFO):");
+	replacement = getchar();  //Replacement holds the replacement policy for the cache.
+	
+	printf("Enter the name of the input file containing the list of memory references generated\n");
+	printf("by the CPU: ");
+	scanf("%s", input);          //Input stores the file name for the memory references.
 
 	mainMem *m = newMem(mainbytes);
 
