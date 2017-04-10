@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include "mainMem.h"
 #include "cache.h"
+#include "queue.h"
+#include "sll.h"
 
 
 int main()
@@ -34,7 +36,7 @@ int main()
 	printf("by the CPU: ");
 	scanf("%s", input);          //Input stores the file name for the memory references.
 
-	//printf("Replacement: %c  Input File: %s\n", replacement,input); //For error checking
+	printf("Replacement: %c  Input File: %s\n", replacement,input); //For error checking
 
 	mainMem *m = newMem(mainbytes);
 
@@ -46,9 +48,28 @@ int main()
 	printf("Number of bits for index= %d \n", indexBits(c));
 	printf("Number of bits for tag= %d \n", tagBits(c));
 	printf("Total cache size required= %d \n\n", totCacheSize(c));
+	printf("main memory address\t mmblk#\t cmset#\t cmblk#\t hit/miss\n");
 
-	free(m);
-	free(c);
+	FILE *fp;
+	fp = fopen(input,"r");
+
+	int num_of_addresses=0,i;
+	fscanf(fp,"%d", &num_of_addresses);
+
+	int address;  char operation;
+	queue *q = newQueue(displayMem);
+	
+	for (i = 0; i < num_of_addresses; ++i)
+	{
+		fscanf(fp," %c %d", &operation, &address);
+		memLoc *loc = newMemLoc(address,c->blockSize, c->cacheSets, c->assoc);
+		enqueue(q,loc);
+	}
+	fclose(fp);
+
+	displayQueue(stdout,q);
+	printf("\n");
 
 	return 0;
 }
+
