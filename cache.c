@@ -40,4 +40,18 @@ int totCacheSize(cache *c)
 {
 	return c->totalCache;
 }
+
+int CacheBlockSize(cache *c)
+{
+	return c->blockSize;
+}
+
+int CacheSets(cache *c)
+{
+	return c->cacheSets;
+}
+extern int Associativity(cache *c)
+{
+	return c->assoc;
+}
 //////////////////////////End Cache Stuff////////////////////////////////////

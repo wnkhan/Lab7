@@ -21,6 +21,9 @@ extern int offBits(cache *c);
 extern int indexBits(cache *c);
 extern int tagBits(cache *c);
 extern int totCacheSize(cache *c);
+extern int CacheBlockSize(cache *c);
+extern int CacheSets(cache *c);
+extern int Associativity(cache *c);
 
 
 #endif

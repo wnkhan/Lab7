@@ -58,11 +58,11 @@ int main()
 
 	int address;  char operation;
 	queue *q = newQueue(displayMem);
-	
+
 	for (i = 0; i < num_of_addresses; ++i)
 	{
 		fscanf(fp," %c %d", &operation, &address);
-		memLoc *loc = newMemLoc(address,c->blockSize, c->cacheSets, c->assoc);
+		memLoc *loc = newMemLoc(address,CacheBlockSize(c), CacheSets(c), Associativity(c));
 		enqueue(q,loc);
 	}
 	fclose(fp);
