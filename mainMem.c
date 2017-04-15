@@ -25,8 +25,9 @@ memLoc *newMemLoc(int addr, int blksize, int cachesets, int N)
 	mL->address = addr;
 	mL->mmblk = addr/blksize;
 	mL->cmset = mL->mmblk % cachesets;
-	mL->cmblk = mL->cmset * N;
-	mL->hit_miss = "in progress";
+	mL->cmblk_top = (mL->cmset * N) + (N -1);
+	mL->cmblk_bottom = (mL->cmblk_top - N) + 1;
+	mL->hit_miss = "miss";
 }
 
 memLoc *getMemLoc(memLoc *m)
@@ -37,9 +38,24 @@ memLoc *getMemLoc(memLoc *m)
 void displayMem(FILE *fp, void *v)
 {
 	memLoc *m = getMemLoc(v);
-	fprintf(stdout, "\t%d\t\t   %d\t   %d\t   %d\t   %s", m->address, m->mmblk, m->cmset, m->cmblk, m->hit_miss);
+	fprintf(stdout, "\t%d\t\t   %d\t   %d\t %d -- %d\t   %s",
+	m->address, m->mmblk, m->cmset, m->cmblk_bottom, m->cmblk_top, m->hit_miss);
 }
 
+int getMMBlk(memLoc *m)
+{
+	return m->mmblk;
+}
+
+int getCSet(memLoc *m)
+{
+	return m->cmset;
+}
+
+int getAddress(memLoc *m)
+{
+	return m->address;
+}
 
 
 /////////////////////////////////////////////////////////

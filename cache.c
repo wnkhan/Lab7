@@ -50,8 +50,35 @@ int CacheSets(cache *c)
 {
 	return c->cacheSets;
 }
-extern int Associativity(cache *c)
+int Associativity(cache *c)
 {
 	return c->assoc;
 }
+
 //////////////////////////End Cache Stuff////////////////////////////////////
+
+/////////////////cacheBlock stuff//////////////////////////
+cacheBlock *newCBlock(int mmblk)
+{
+	cacheBlock *cb = malloc(sizeof(cacheBlock));
+	cb->data = mmblk;
+	cb->dirty = 0;
+	cb->valid = 0;
+	cb->tag = "in progress";
+}
+
+cacheBlock *getCBlock(cacheBlock *cb)
+{
+	return cb;
+}
+
+void displayC(FILE *fp, void *v)
+{
+	cacheBlock *cb = getCBlock(v);
+	fprintf(fp, "\t%d \t%d \t%s mmblk # %d", cb->dirty, cb->valid, cb->tag, cb->data);
+}
+
+int getData(cacheBlock *cb)
+{
+	return cb->data;
+}

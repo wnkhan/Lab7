@@ -20,16 +20,17 @@ typedef struct memLoc
 	int address;
 	int mmblk;
 	int cmset;
-	int cmblk;
+	int cmblk_top;
+	int cmblk_bottom;
 	char *hit_miss;
 }memLoc;
 
 extern memLoc *newMemLoc(int addr, int blksize, int cachesets, int N);
 extern memLoc *getMemLoc(memLoc *m);
 extern void displayMem(FILE *, void *);
-
-
-
+extern int getMMBlk(memLoc *m);
+extern int getCSet(memLoc *m);
+extern int getAddress(memLoc *m);
 
 ///////////////////////////////////
 
