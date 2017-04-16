@@ -147,14 +147,25 @@ int main()
 	// 	printf("\n");
 	// }
 
+
 	for (i = 0; i < CacheSets(c); ++i)
 	{
+		for (j = 0; j < Associativity(c); ++j)
+		{
+			if (getDArray(DcacheSets[i],j)==NULL)
+			{
+				cacheBlock *emptySlot = newCBlock(-1);
+				setDArray(DcacheSets[i], j, emptySlot);
+			}
+		}
+	}
 
-		printf("Cache sets for DArray %d\n", i);
+	for (i = 0; i < CacheSets(c); ++i)
+	{
+		//printf("Cache sets for DArray %d\n", i);
 		displayDArray(stdout,DcacheSets[i]);
-		printf("\n");
+		//printf("\n");
 	}
 
 	return 0;
 }
-
