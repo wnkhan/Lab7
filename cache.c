@@ -77,7 +77,14 @@ cacheBlock *getCBlock(cacheBlock *cb)
 void displayC(FILE *fp, void *v)
 {
 	cacheBlock *cb = getCBlock(v);
-	fprintf(fp, "\t%d \t%d \t%s mmblk # %d \tage = %d", cb->dirty, cb->valid, cb->tag, cb->data, cb->age);
+	if (cb->data == -1)
+	{
+		fprintf(fp, "\t%d \t%d \t%s mmblk # xxx \t", cb->dirty, cb->valid, cb->tag);
+	}
+	else
+	{
+		fprintf(fp, "\t%d \t%d \t%s mmblk # %d \t", cb->dirty, cb->valid, cb->tag, cb->data);
+	}
 }
 
 int getData(cacheBlock *cb)

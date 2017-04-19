@@ -39,8 +39,8 @@ memLoc *getMemLoc(memLoc *m)
 void displayMem(FILE *fp, void *v)
 {
 	memLoc *m = getMemLoc(v);
-	fprintf(stdout, "%d \t%d\t\t   %d\t   %d\t %d -- %d\t   %s",
-	m->opNum, m->address, m->mmblk, m->cmset, m->cmblk_bottom, m->cmblk_top, m->hit_miss);
+	fprintf(stdout, "\t%d\t\t   %d\t   %d\t %d -- %d\t   %s",
+	m->address, m->mmblk, m->cmset, m->cmblk_bottom, m->cmblk_top, m->hit_miss);
 }
 
 int getMMBlk(memLoc *m)

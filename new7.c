@@ -115,7 +115,6 @@ int main()
 			{
 				if (getMMBlk(Op) == getData(getDArray(DcacheSets[getCSet(Op)],j)))
 				{ 
-					printf("hit mmblk %d\n", getMMBlk(Op));
 					updateAge(getDArray(DcacheSets[getCSet(Op)],j),Op->opNum);
 					found = 1;
 					break;
@@ -151,16 +150,13 @@ int main()
 				else if(replacement == 'L')
 				{
 					int smallest = getAge(cblock), index = 0;
-					printf("initial smallest %d and index %d\n",smallest, index);
 					for (j = 0; j < Associativity(c); ++j)
 					{
 						int age = getAge(getDArray(DcacheSets[getCSet(Op)],j));
-						if (smallest - age > 0);
+						if (smallest > age)
 						{
-							printf("before - smallest %d  age %d index %d\n", smallest, age, index);
 							smallest = age;
 							index = j;
-							printf("after - smallest %d  age %d index %d\n", smallest, age, index);
 						}
 					}
 					setDArray(DcacheSets[getCSet(Op)], index, cblock);
@@ -168,13 +164,6 @@ int main()
 			}
 		}
 	}
-
-	// for (i = 0; i < CacheSets(c); ++i)
-	// {
-	// 	printf("Cache Set Queue %d\n", i);
-	// 	displayQueue(stdout, QcacheSets[i]);
-	// 	printf("\n");
-	// }
 
 	//Fills in untouched slots with default values
 	for (i = 0; i < CacheSets(c); ++i)
