@@ -17,6 +17,7 @@ extern int addressLines(mainMem *m);
 
 typedef struct memLoc
 {
+	int opNum;
 	int address;
 	int mmblk;
 	int cmset;
@@ -25,12 +26,13 @@ typedef struct memLoc
 	char *hit_miss;
 }memLoc;
 
-extern memLoc *newMemLoc(int addr, int blksize, int cachesets, int N);
+extern memLoc *newMemLoc(int opNum, int addr, int blksize, int cachesets, int N);
 extern memLoc *getMemLoc(memLoc *m);
 extern void displayMem(FILE *, void *);
 extern int getMMBlk(memLoc *m);
 extern int getCSet(memLoc *m);
 extern int getAddress(memLoc *m);
+extern int getOpNum(memLoc *m);
 
 ///////////////////////////////////
 

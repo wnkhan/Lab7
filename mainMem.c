@@ -19,9 +19,10 @@ int addressLines(mainMem *m)
 //////////////////////////////////////////////////////////
 
 ///////////////////Mem Locations/////////////////////////
-memLoc *newMemLoc(int addr, int blksize, int cachesets, int N)
+memLoc *newMemLoc(int i, int addr, int blksize, int cachesets, int N)
 {
 	memLoc *mL = malloc(sizeof(memLoc));
+	mL->opNum = i;
 	mL->address = addr;
 	mL->mmblk = addr/blksize;
 	mL->cmset = mL->mmblk % cachesets;
@@ -38,8 +39,8 @@ memLoc *getMemLoc(memLoc *m)
 void displayMem(FILE *fp, void *v)
 {
 	memLoc *m = getMemLoc(v);
-	fprintf(stdout, "\t%d\t\t   %d\t   %d\t %d -- %d\t   %s",
-	m->address, m->mmblk, m->cmset, m->cmblk_bottom, m->cmblk_top, m->hit_miss);
+	fprintf(stdout, "%d \t%d\t\t   %d\t   %d\t %d -- %d\t   %s",
+	m->opNum, m->address, m->mmblk, m->cmset, m->cmblk_bottom, m->cmblk_top, m->hit_miss);
 }
 
 int getMMBlk(memLoc *m)
@@ -55,6 +56,11 @@ int getCSet(memLoc *m)
 int getAddress(memLoc *m)
 {
 	return m->address;
+}
+
+int getOpNum(memLoc *m)
+{
+	return m->opNum;
 }
 
 

@@ -1,11 +1,16 @@
 //Lab7 -- ECE487
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include "mainMem.h"
 #include "cache.h"
 #include "queue.h"
 #include "sll.h"
 #include "darray.h"
+
+int isNotEmpty(DArray *array);
+int isFull(DArray *array);
+int filledSlots(DArray *array);
 
 
 int main()
@@ -65,7 +70,7 @@ int main()
 	for (i = 0; i < num_of_addresses; ++i)
 	{
 		fscanf(fp," %c %d", &operation, &address);
-		memLoc *loc = newMemLoc(address,CacheBlockSize(c), CacheSets(c), Associativity(c));
+		memLoc *loc = newMemLoc(i,address,CacheBlockSize(c), CacheSets(c), Associativity(c));
 		mmblk_list[i] = getMMBlk(loc);
 		for (j=i-1; j >= 0; --j)
 		{	
@@ -97,45 +102,69 @@ int main()
 		}
 	}
 
-	//Only for FIFO operations
+	
 	for (i = 0; i < num_of_addresses; ++i)
 	{
 		int found = 0;
 		memLoc *Op = getDArray(memOps, i);
-
-		cacheBlock *cblock = newCBlock(getMMBlk(Op));
-		if (sizeQueue(QcacheSets[getCSet(Op)]) > 0)  //If the cache set is not empty check for hit
+		
+		cacheBlock *cblock = newCBlock(getMMBlk(Op),getOpNum(Op));
+		if (isNotEmpty(DcacheSets[getCSet(Op)]))  //If there is an item in the array check the array for a hit
 		{
-			for (j = 0; j < sizeQueue(QcacheSets[getCSet(Op)]); ++j)
+			for (j = 0; j < filledSlots(DcacheSets[getCSet(Op)]); ++j)
 			{
 				if (getMMBlk(Op) == getData(getDArray(DcacheSets[getCSet(Op)],j)))
-				{
+				{ 
+					printf("hit mmblk %d\n", getMMBlk(Op));
+					updateAge(getDArray(DcacheSets[getCSet(Op)],j),Op->opNum);
 					found = 1;
 					break;
 				}
 			}
 		}
-		if (found != 1)
+		if (found != 1)   //If there were not hits 
 		{
-		
-			if (sizeQueue(QcacheSets[getCSet(Op)]) != Associativity(c)) //If cache set is not full insert
+			if (!(isFull(DcacheSets[getCSet(Op)])))  //Set the next empty slot if the memory block isn't full
 			{
-				enqueue(QcacheSets[getCSet(Op)], cblock);
-				//Set next empty slot in CacheSet for DArray
-				setDArray(DcacheSets[getCSet(Op)],sizeQueue(QcacheSets[getCSet(Op)])-1, cblock);
-			}
-			else               //If cache set is full replace something
-			{
-				cacheBlock *removed = dequeue(QcacheSets[getCSet(Op)]);
-				for (j = 0; j < Associativity(c); ++j)
+				if (replacement == 'F')
 				{
-					if (getData(removed) == getData(getDArray(DcacheSets[getCSet(Op)],j)))
-					{
-						break;
-					}
+					enqueue(QcacheSets[getCSet(Op)], cblock);
 				}
-				setDArray(DcacheSets[getCSet(Op)], j, cblock);
-				enqueue(QcacheSets[getCSet(Op)], cblock);
+				//Set next empty slot in CacheSet for DArray
+				setDArray(DcacheSets[getCSet(Op)], filledSlots(DcacheSets[getCSet(Op)]), cblock);
+			}
+			else               //If cache set is full replace something  //This conditional is the only place where the replacement policy matters
+			{
+				if (replacement == 'F')
+				{
+					cacheBlock *removed = dequeue(QcacheSets[getCSet(Op)]);
+					for (j = 0; j < Associativity(c); ++j)
+					{
+						if (getData(removed) == getData(getDArray(DcacheSets[getCSet(Op)],j)))
+						{
+							break;
+						}
+					}
+					setDArray(DcacheSets[getCSet(Op)], j, cblock);
+					enqueue(QcacheSets[getCSet(Op)], cblock);
+				}
+				else if(replacement == 'L')
+				{
+					int smallest = getAge(cblock), index = 0;
+					printf("initial smallest %d and index %d\n",smallest, index);
+					for (j = 0; j < Associativity(c); ++j)
+					{
+						int age = getAge(getDArray(DcacheSets[getCSet(Op)],j));
+						if (smallest - age > 0);
+						{
+							printf("before - smallest %d  age %d index %d\n", smallest, age, index);
+							smallest = age;
+							index = j;
+							printf("after - smallest %d  age %d index %d\n", smallest, age, index);
+						}
+					}
+					setDArray(DcacheSets[getCSet(Op)], index, cblock);
+				}
 			}
 		}
 	}
@@ -147,14 +176,14 @@ int main()
 	// 	printf("\n");
 	// }
 
-
+	//Fills in untouched slots with default values
 	for (i = 0; i < CacheSets(c); ++i)
 	{
 		for (j = 0; j < Associativity(c); ++j)
 		{
 			if (getDArray(DcacheSets[i],j)==NULL)
 			{
-				cacheBlock *emptySlot = newCBlock(-1);
+				cacheBlock *emptySlot = newCBlock(-1, -1);
 				setDArray(DcacheSets[i], j, emptySlot);
 			}
 		}
@@ -168,4 +197,43 @@ int main()
 	}
 
 	return 0;
+}
+
+int isNotEmpty(DArray *array)
+{
+	int i;
+	for (i = 0; i < sizeDArray(array); ++i)
+	{
+		if (getDArray(array, i)!=NULL)
+		{
+			return 1;
+		}
+	}
+	return 0;
+}
+
+int isFull(DArray *array)
+{
+	int i;
+	for (i = 0; i < sizeDArray(array); ++i)
+	{
+		if (getDArray(array, i)==NULL)
+		{
+			return 0;
+		}
+	}
+	return 1;
+}
+
+int filledSlots(DArray *array)
+{
+	int i;
+	for (i = 0; i < sizeDArray(array); ++i)
+	{
+		if (getDArray(array,i)==NULL)
+		{
+			return i;
+		}
+	}
+	return sizeDArray(array);
 }

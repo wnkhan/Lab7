@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include "cache.h"
 #include "mainMem.h"
 
@@ -58,9 +59,10 @@ int Associativity(cache *c)
 //////////////////////////End Cache Stuff////////////////////////////////////
 
 /////////////////cacheBlock stuff//////////////////////////
-cacheBlock *newCBlock(int mmblk)
+cacheBlock *newCBlock(int mmblk, int age)
 {
 	cacheBlock *cb = malloc(sizeof(cacheBlock));
+	cb->age = age;
 	cb->data = mmblk;
 	cb->dirty = 0;
 	cb->valid = 0;
@@ -75,10 +77,20 @@ cacheBlock *getCBlock(cacheBlock *cb)
 void displayC(FILE *fp, void *v)
 {
 	cacheBlock *cb = getCBlock(v);
-	fprintf(fp, "\t%d \t%d \t%s mmblk # %d", cb->dirty, cb->valid, cb->tag, cb->data);
+	fprintf(fp, "\t%d \t%d \t%s mmblk # %d \tage = %d", cb->dirty, cb->valid, cb->tag, cb->data, cb->age);
 }
 
 int getData(cacheBlock *cb)
 {
 	return cb->data;
+}
+
+int getAge(cacheBlock *cb)
+{
+	return cb->age;
+}
+
+void updateAge(cacheBlock *cb, int age)
+{
+	cb->age = age;
 }
