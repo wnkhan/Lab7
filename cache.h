@@ -1,4 +1,3 @@
-#include <time.h>
 #ifndef CACHE_INCLUDED_
 #define CACHE_INCLUDED_
 
@@ -20,10 +19,12 @@ typedef struct cache
 typedef struct cacheBlock
 {
 	int data;
+	int blk_num;
 	int age;
 	int dirty;
 	int valid;
-	char *tag;
+	double itag;
+	char ctag[16];
 	double time_accessed;
 }cacheBlock;
 
@@ -36,12 +37,14 @@ extern int CacheBlockSize(cache *c);
 extern int CacheSets(cache *c);
 extern int Associativity(cache *c);
 
-extern cacheBlock *newCBlock(int mmblk, int age);
+extern cacheBlock *newCBlock(char oper, int mmblk, int age, int valid);
 extern cacheBlock *getCBlock(cacheBlock *cb);
 extern void displayC(FILE *fp, void *v);
 extern int getData(cacheBlock *cb);
 extern int getAge(cacheBlock *cb);
 extern void updateAge(cacheBlock *cb, int age);
+extern void setCBNum(cacheBlock *cb, int number);
+extern void setTag(cacheBlock *cb, int address, int tagSize, int totalSize);
 
 
 #endif

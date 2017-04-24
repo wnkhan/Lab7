@@ -59,14 +59,22 @@ int Associativity(cache *c)
 //////////////////////////End Cache Stuff////////////////////////////////////
 
 /////////////////cacheBlock stuff//////////////////////////
-cacheBlock *newCBlock(int mmblk, int age)
+cacheBlock *newCBlock(char oper, int mmblk, int age, int valid)
 {
 	cacheBlock *cb = malloc(sizeof(cacheBlock));
+	if (oper == 'R')
+	{
+		cb->dirty = 0;
+	}
+	else
+	{
+		cb->dirty = 1;
+	}
+	cb->blk_num = 0;
 	cb->age = age;
 	cb->data = mmblk;
-	cb->dirty = 0;
-	cb->valid = 0;
-	cb->tag = "in progress";
+	cb->valid = valid;
+	cb->itag = 0;
 }
 
 cacheBlock *getCBlock(cacheBlock *cb)
@@ -79,11 +87,11 @@ void displayC(FILE *fp, void *v)
 	cacheBlock *cb = getCBlock(v);
 	if (cb->data == -1)
 	{
-		fprintf(fp, "\t%d \t%d \t%s mmblk # xxx \t", cb->dirty, cb->valid, cb->tag);
+		fprintf(fp, "\t%d \t%d \t%d \t%.0f \tmmblk # xxx \t", cb->blk_num, cb->dirty, cb->valid, cb->itag);
 	}
 	else
 	{
-		fprintf(fp, "\t%d \t%d \t%s mmblk # %d \t", cb->dirty, cb->valid, cb->tag, cb->data);
+		fprintf(fp, "\t%d \t%d \t%d \t%.0f \tmmblk # %d \t", cb->blk_num, cb->dirty, cb->valid, cb->itag, cb->data);
 	}
 }
 
@@ -100,4 +108,22 @@ int getAge(cacheBlock *cb)
 void updateAge(cacheBlock *cb, int age)
 {
 	cb->age = age;
+}
+
+void setCBNum(cacheBlock *cb, int number)
+{
+	cb->blk_num = number;
+}
+
+void setTag(cacheBlock *cb, int address, int tagSize, int totalSize)
+{
+	double tempTag = DectoBin(address);
+
+	int i;
+	for (i = 0; i < totalSize-tagSize; ++i)
+	{
+		tempTag /= 10;
+	}
+	cb->itag = tempTag;
+	cb->ctag = itoa(cb->itag, cb->ctag, 2);
 }

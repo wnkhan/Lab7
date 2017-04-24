@@ -11,7 +11,7 @@
 int isNotEmpty(DArray *array);
 int isFull(DArray *array);
 int filledSlots(DArray *array);
-
+void printCacheHeading();
 
 int main()
 {
@@ -70,7 +70,7 @@ int main()
 	for (i = 0; i < num_of_addresses; ++i)
 	{
 		fscanf(fp," %c %d", &operation, &address);
-		memLoc *loc = newMemLoc(i,address,CacheBlockSize(c), CacheSets(c), Associativity(c));
+		memLoc *loc = newMemLoc(i, operation,address,CacheBlockSize(c), CacheSets(c), Associativity(c));
 		mmblk_list[i] = getMMBlk(loc);
 		for (j=i-1; j >= 0; --j)
 		{	
@@ -108,7 +108,8 @@ int main()
 		int found = 0;
 		memLoc *Op = getDArray(memOps, i);
 		
-		cacheBlock *cblock = newCBlock(getMMBlk(Op),getOpNum(Op));
+		cacheBlock *cblock = newCBlock(getMMOp(Op),getMMBlk(Op),getOpNum(Op),1);
+		setTag(cblock, getAddress(Op), tagBits(c), addressLines(m));
 		if (isNotEmpty(DcacheSets[getCSet(Op)]))  //If there is an item in the array check the array for a hit
 		{
 			for (j = 0; j < filledSlots(DcacheSets[getCSet(Op)]); ++j)
@@ -172,17 +173,27 @@ int main()
 		{
 			if (getDArray(DcacheSets[i],j)==NULL)
 			{
-				cacheBlock *emptySlot = newCBlock(-1, -1);
+				cacheBlock *emptySlot = newCBlock('R',-1, -1,0);
 				setDArray(DcacheSets[i], j, emptySlot);
 			}
 		}
 	}
-
+	//Sets cacheblock numbers
+	int blockNumber = 0;
 	for (i = 0; i < CacheSets(c); ++i)
 	{
-		//printf("Cache sets for DArray %d\n", i);
+		for (j = 0; j < Associativity(c); ++j)
+		{
+			cacheBlock *block = getDArray(DcacheSets[i],j);
+			setCBNum(block, blockNumber);
+			blockNumber++;
+		}
+	}
+
+	printCacheHeading();
+	for (i = 0; i < CacheSets(c); ++i)
+	{
 		displayDArray(stdout,DcacheSets[i]);
-		//printf("\n");
 	}
 
 	return 0;
@@ -225,4 +236,9 @@ int filledSlots(DArray *array)
 		}
 	}
 	return sizeDArray(array);
+}
+
+void printCacheHeading()
+{
+	printf("Cache blk# \tDirty \tValid \ttag \tData\n");
 }

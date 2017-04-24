@@ -19,10 +19,11 @@ int addressLines(mainMem *m)
 //////////////////////////////////////////////////////////
 
 ///////////////////Mem Locations/////////////////////////
-memLoc *newMemLoc(int i, int addr, int blksize, int cachesets, int N)
+memLoc *newMemLoc(int i,char opType, int addr, int blksize, int cachesets, int N)
 {
 	memLoc *mL = malloc(sizeof(memLoc));
 	mL->opNum = i;
+	mL->operation = opType;
 	mL->address = addr;
 	mL->mmblk = addr/blksize;
 	mL->cmset = mL->mmblk % cachesets;
@@ -62,6 +63,10 @@ int getOpNum(memLoc *m)
 {
 	return m->opNum;
 }
+char getMMOp(memLoc *m)
+{
+	return m->operation;
+}
 
 
 /////////////////////////////////////////////////////////
@@ -79,4 +84,62 @@ int numberofbits(int num){
 	}
 		count = count -1;
 		return count;
+}
+
+double DectoBin(int address)
+{
+	long remainder;
+	long binary = 0;
+	long b = 1;
+	address = (long) address;
+	while(address!=0)
+	{
+		remainder = address%2;
+		address = address/2;
+		binary = binary + (remainder *b);
+		b*=10;
+	}
+	return binary;
+}
+
+// Implementation of itoa()
+char* itoa(int num, char* str, int base)
+{
+int i = 0;
+int isNegative = 0;
+
+/* Handle 0 explicitely, otherwise empty string is printed for 0 */
+if (num == 0)
+{
+str[i++] = '0';
+str[i] = '\0';
+return str;
+}
+
+// In standard itoa(), negative numbers are handled only with 
+// base 10. Otherwise numbers are considered unsigned.
+if (num < 0 && base == 10)
+{
+isNegative = 1;
+num = -num;
+}
+
+// Process individual digits
+while (num != 0)
+{
+int rem = num % base;
+str[i++] = (rem > 9)? (rem-10) + 'a' : rem + '0';
+num = num/base;
+}
+
+// If number is negative, append '-'
+if (isNegative)
+str[i++] = '-';
+
+str[i] = '\0'; // Append string terminator
+
+// Reverse the string
+reverse(str, i);
+
+return str;
 }
